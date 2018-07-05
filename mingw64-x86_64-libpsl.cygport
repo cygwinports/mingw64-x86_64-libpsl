@@ -1,0 +1,27 @@
+CROSS_HOST="x86_64-w64-mingw32"
+inherit cross
+
+NAME="mingw64-x86_64-libpsl"
+VERSION=0.20.2
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="Public Suffix List library for Win64 toolchain"
+DESCRIPTION="A public suffix is one under which Internet users can (or
+historically could) directly register names. Some examples of public
+suffixes are .com, .co.uk and pvt.k12.ma.us. The Public Suffix List is a
+list of all known public suffixes."
+HOMEPAGE="https://github.com/rockdaboot/libpsl/"
+SRC_URI="https://github.com/rockdaboot/libpsl/releases/download/libpsl-${VERSION}/libpsl-${VERSION}.tar.gz"
+SRC_DIR="libpsl-${VERSION}"
+
+# libpsl is used by curl and wget (which both now use libidn2)
+# inet_pton: autoconf link tests do not work with stdcall functions
+CYGCONF_ARGS="
+	--disable-gtk-doc
+	--disable-man
+	--enable-runtime=libidn2
+	--enable-builtin=libicu
+	--with-psl-file=/usr/share/publicsuffix/public_suffix_list.dat
+	ac_cv_search_inet_pton=-lws2_32
+"
+MAKEOPTS+=" bin_PROGRAMS= dist_man_MANS= "
